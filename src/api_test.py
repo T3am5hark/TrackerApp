@@ -6,11 +6,11 @@ HEADERS = {'User-Agent': 'Mozilla/5.0',
 
 # Chester Testerson
 user_id = '17be08c2-c50f-4446-8815-ae2679964f0f'
-server = 'http://localhost:5000'
-service_url = server + '/api/v1/PostTag'
+server = r'http://localhost:5000'
+service_url = server + r'/api/v1/PostTag'
 logger = init_logging('api_test')
 
-logger.info('Testing API...')
+logger.info('Testing API at {0}'.format(service_url))
 
 n = 3
 for i in range(1, n+1):
