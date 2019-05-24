@@ -1,0 +1,38 @@
+import requests
+from src.util.log_utils import init_logging
+
+HEADERS = {'User-Agent': 'Mozilla/5.0',
+           'Accept': 'application/json'}
+
+# Chester Testerson
+user_id = '17be08c2-c50f-4446-8815-ae2679964f0f'
+server = 'http://localhost:5000'
+logger = init_logging()
+
+logger.info('Testing API...')
+
+n = 10
+for i in range(1, n+1):
+    logger.info('{} of {}'.format(i, n))
+
+    data = {'userId': user_id,
+            'latitude': 32.2226,
+            'longitude': -110.9747,
+            'application': 'api_test.py'}
+
+    try:
+        session = requests.Session()
+        result = session.post(server, data=data,
+                              headers=HEADERS,
+                              timeout=30)
+        result_json = result.json
+
+        if result_json['success'] != 1:
+            logger.error(result_json['error'])
+
+    except Exception as ex:
+        logger.exception(str(ex))
+
+
+
+
