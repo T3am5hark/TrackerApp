@@ -8,6 +8,22 @@ app = Flask(__name__)
 logger = init_logging()
 
 
+@app.route("/api/v1/RetrieveForUser", methods=['GET'])
+def get_for_user():
+
+    log_inbound(request)
+    user_id = request.args.get('userId', None)
+
+    sql = '''
+        SELECT u.FullName, g.*
+          FROM Geotag.Geotag g
+          JOIN User.User u on u.UserId = g.UserId
+        WHERE 1=1
+        AND u.UserId = {user_id}
+    '''.format(user_id=user_id)
+
+
+
 @app.route("/api/v1/PostTag", methods=['POST'])
 def post_geotag():
 
@@ -24,9 +40,13 @@ def post_geotag():
         Geotag, Application)
         VALUES
         ('{user_id}', CURRENT_TIMESTAMP(),
-         ST_GEOGPOINT({lat}, {long}), {app})
-        '''.format(user_id=user_id, lat=latitude,
-                   long=longitude, app=application)
+         ST_GEOGPOINT({long}, {lat}), '{app}')
+        '''.format(user_id=user_id,
+                   lat=latitude,
+                   long=longitude,
+                   app=application)
+
+    logger.debug(sql)
 
     try:
         client = bigquery.Client()
